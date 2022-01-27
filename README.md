@@ -1,2 +1,2 @@
 # geoelastix
-Using image registration package elastix for georectification
+Image registration for georectification
