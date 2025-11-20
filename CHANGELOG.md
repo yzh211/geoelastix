@@ -9,6 +9,45 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.1.0] - 2024-11-20
 
+### Added - Phase 4: CLI & Integration
+
+- **Configuration Parser**
+  - `ConfigParser`: YAML configuration file parsing and validation
+    - Default configuration with all options
+    - Merge user config with defaults
+    - Comprehensive validation (required fields, file existence, valid options)
+    - Template generation for new users
+    - Pretty-print and JSON export
+
+- **Workflow Orchestrator**
+  - `WorkflowOrchestrator`: End-to-end workflow execution
+    - 8-step automated workflow from input to output
+    - Progress logging at each step
+    - Automatic output directory structure
+    - Integration of all modules (I/O, registration, displacement, validation, visualization)
+    - Error handling and recovery
+    - Timing and performance tracking
+    - Support for both tiled and non-tiled processing
+
+- **Command-Line Interface**
+  - Main CLI with argparse framework
+  - Multiple commands:
+    - `register`: Perform registration and displacement analysis
+    - `list-methods`: Show available registration methods
+    - `show-params`: Display parameter file contents
+    - `create-config`: Generate configuration template
+    - `validate-config`: Validate configuration file
+  - Flexible input methods:
+    - Configuration file (YAML)
+    - Command-line arguments
+    - Mix of both (CLI overrides config)
+  - Rich help messages and examples
+
+- **Entry Point**
+  - Console script: `geoelastix` command
+  - Version display: `geoelastix --version`
+  - Comprehensive help: `geoelastix --help`
+
 ### Added - Phase 3: Validation & Visualization
 
 - **Quality Metrics Module**
