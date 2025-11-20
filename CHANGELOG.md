@@ -9,6 +9,50 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.1.0] - 2024-11-20
 
+### Added - Phase 3: Validation & Visualization
+
+- **Quality Metrics Module**
+  - `QualityMetrics`: Comprehensive registration quality assessment
+    - RMSE (Root Mean Square Error) calculation
+    - Mutual Information (MI) and Normalized MI
+    - Dice coefficient for mask overlap
+    - Coverage statistics (overlap percentages)
+    - Pearson correlation coefficient
+    - All metrics support masking for valid regions only
+
+- **Quality Checker**
+  - `QualityChecker`: Automated quality assessment with thresholds
+    - Configurable warning and error thresholds
+    - RMSE, overlap, no-data, Dice, correlation, and MI checks
+    - Displacement statistics validation
+    - Quality report generation (text format)
+    - JSON export for machine-readable metrics
+
+- **Visualization Modules**
+  - `QuiverPlot`: Vector field visualization for horizontal displacement
+    - Standard quiver plots with magnitude coloring
+    - Quiver overlay on background images
+    - Magnitude and direction side-by-side plots
+    - Rose diagrams for displacement direction distribution
+    - Configurable subsampling, colormaps, and scaling
+
+  - `ContourPlot`: Contour map visualization
+    - Filled contour plots for displacement fields
+    - Multi-panel layout (X, Y, Z, magnitude)
+    - Hillshade overlay for 3D effect
+    - Difference maps between datasets
+    - Symmetric colormaps centered at zero
+    - Customizable levels, colors, and labels
+
+- **Report Generator**
+  - `ReportGenerator`: Automated report creation
+    - Text-based comprehensive reports
+    - JSON metrics export
+    - Summary figures with multiple plots
+    - Job information and metadata tracking
+    - Quality assessment integration
+    - Displacement statistics summaries
+
 ### Added - Phase 2: Displacement & Tiling
 
 - **Displacement Calculation Modules**
