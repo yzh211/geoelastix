@@ -1,0 +1,53 @@
+name: Documentation
+
+on:
+  push:
+    branches: [ master, main ]
+  pull_request:
+    branches: [ master, main ]
+
+jobs:
+  check-docs:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+
+    - name: Check documentation files exist
+      run: |
+        test -f README.md || exit 1
+        test -f docs/INSTALLATION.md || exit 1
+        test -f docs/USER_GUIDE.md || exit 1
+        test -f docs/API.md || exit 1
+        test -f docs/METHODOLOGY.md || exit 1
+        test -f docs/TROUBLESHOOTING.md || exit 1
+        test -f docs/QUICKSTART.md || exit 1
+        test -f CHANGELOG.md || exit 1
+        echo "✓ All required documentation files present"
+
+    - name: Check for broken links in markdown
+      uses: gaurav-nelson/github-action-markdown-link-check@v1
+      with:
+        use-quiet-mode: 'yes'
+        config-file: '.github/markdown-link-check-config.json'
+        continue-on-error: true
+
+    - name: Validate example configs
+      run: |
+        pip install pyyaml
+        python -c "
+        import yaml
+        from pathlib import Path
+
+        configs = Path('examples').rglob('*.yaml')
+        for config in configs:
+            print(f'Validating {config}...')
+            with open(config) as f:
+                yaml.safe_load(f)
+        print('✓ All example configs valid')
+        "
