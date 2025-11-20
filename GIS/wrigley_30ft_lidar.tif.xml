@@ -1,0 +1,2 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata xml:lang="en"><Esri><CreaDate>20220226</CreaDate><CreaTime>14535900</CreaTime><ArcGISFormat>1.0</ArcGISFormat><SyncOnce>TRUE</SyncOnce><DataProperties><lineage><Process ToolSource="c:\program files (x86)\arcgis\desktop10.8\ArcToolbox\Toolboxes\Spatial Analyst Tools.tbx\ExtractByMask" Date="20220226" Time="145359">ExtractByMask three_counties_1601_sm.tif wrigley_30ft_legacy.tif C:\Users\tup46467\Dropbox\Documents\USGS_mapping\geoelastix\GIS\wrigley_30ft_lidar_sm2.tif</Process></lineage></DataProperties></Esri></metadata>

@@ -1,0 +1,53 @@
+# GeoElastix Configuration for Wrigley Landslide Monitoring
+# Example: Legacy DEM vs LiDAR DEM Registration
+
+job:
+  id: "wrigley_landslide"
+  description: "legacy_vs_lidar"
+  output_dir: "./output"
+
+input:
+  fixed_image: "./examples/wrigley/data/wrigley_30ft_lidar.tif"     # Newer LiDAR DEM (reference)
+  moving_image: "./examples/wrigley/data/wrigley_30ft_legacy.tif"   # Older legacy DEM
+
+registration:
+  method: "NA"              # Non-Affine (deformable) registration
+  metric: "NCC"             # Normalized Cross-Correlation
+  parameter_file: null      # Use default NA_NCC_ASGD parameters
+
+processing:
+  tile_threshold: 5000      # Enable tiling if image dimension > 5000 pixels
+  tile_overlap: 100         # Pixel overlap between tiles
+  num_threads: 4            # Number of parallel threads
+
+output:
+  formats: ["geotiff", "asc"]   # Output displacement fields in both formats
+  generate_magnitude: true       # Generate horizontal displacement magnitude
+  compression: "LZW"             # GeoTIFF compression
+
+visualization:
+  generate_plots: true
+  plot_types:
+    - "quiver"               # Vector field for horizontal displacement
+    - "contour_x"            # Contour map for X (East-West) displacement
+    - "contour_y"            # Contour map for Y (North-South) displacement
+    - "contour_z"            # Contour map for Z (vertical) displacement
+    - "contour_magnitude"    # Contour map for total horizontal displacement
+  dpi: 300
+  colormap: "viridis"
+  quiver_subsample: 50       # Show every 50th vector in quiver plot
+
+reporting:
+  generate_pdf: true
+  include_metrics: true
+  include_parameters: true
+  include_visualizations: true
+
+quality:
+  rmse_warning_threshold: 10.0    # Warning if RMSE > 10 meters
+  min_overlap_percent: 70          # Warning if valid overlap < 70%
+  max_nodata_percent: 30           # Warning if no-data > 30%
+
+logging:
+  level: "INFO"              # DEBUG, INFO, WARNING, ERROR
+  save_to_file: true

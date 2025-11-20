@@ -1,0 +1,42 @@
+name: geoelastix
+channels:
+  - conda-forge
+  - defaults
+
+dependencies:
+  # Core Python
+  - python>=3.8
+
+  # Geospatial libraries (GDAL must be from conda for Windows compatibility)
+  - gdal>=3.4
+  - rasterio>=1.3
+  - pyproj>=3.3
+
+  # Scientific computing
+  - numpy>=1.20
+  - scipy>=1.7
+
+  # Image processing and registration
+  - itk>=5.2
+  - itk-elastix>=0.17
+
+  # Visualization
+  - matplotlib>=3.5
+
+  # Configuration and I/O
+  - pyyaml>=6.0
+
+  # PDF generation
+  - reportlab>=3.6
+  - pillow>=9.0
+
+  # Testing
+  - pytest>=7.0
+  - pytest-cov>=3.0
+
+  # Development tools
+  - pip
+
+  # Pip dependencies (if needed)
+  - pip:
+    - itk-io>=5.2
