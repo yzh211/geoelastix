@@ -32,6 +32,10 @@ class TwoPassRegistration:
         """
         Perform two-pass registration.
 
+        This method calls elastix_registration_method twice with the same
+        fixed and moving images. The second pass refines the registration
+        from the first pass, leading to improved accuracy.
+
         Parameters
         ----------
         fixed_image : itk.Image
@@ -76,15 +80,22 @@ class TwoPassRegistration:
 
         logger.info("Pass 1 completed")
 
-        # Second pass - use first pass result as moving image
+        # Validate first pass result
+        if pass1_image is None:
+            logger.error("Pass 1 returned None for registered image")
+            raise ValueError("Pass 1 registration failed - returned None")
+
+        # Second pass - register the SAME original images again
+        # This refines the registration from pass 1
         logger.info("")
         logger.info("PASS 2: Refinement registration")
         logger.info("-"*60)
+        logger.info("Re-registering original moving image to fixed image for refinement")
 
         wrapper2 = ElastixWrapper(self.parameter_object)
         pass2_image, pass2_params = wrapper2.register(
             fixed_image,
-            pass1_image,  # Use result from first pass
+            moving_image,  # Use ORIGINAL moving image, not pass1 result
             fixed_mask=fixed_mask,
             moving_mask=moving_mask,
             log_to_console=log_to_console

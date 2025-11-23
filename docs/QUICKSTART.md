@@ -108,6 +108,22 @@ Open displacement rasters in GIS software:
 - Always positive
 - Useful for identifying areas of maximum movement
 
+## Testing Your Installation
+
+Before processing your own data, test the installation with the quick test script:
+
+```bash
+python quick_test.py
+```
+
+**What it does**:
+- Tests all required dependencies (NumPy, GDAL, ITK, Matplotlib)
+- Verifies GeoElastix modules load correctly
+- Checks for Wrigley example data files
+- Optionally runs full registration test with visualization
+
+This interactive script helps identify installation issues and validates your setup.
+
 ## Example: Wrigley Landslide
 
 Try the included Wrigley landslide example:
@@ -115,6 +131,12 @@ Try the included Wrigley landslide example:
 ```bash
 cd examples/wrigley
 geoelastix register --config config_wrigley.yaml
+```
+
+Or use the simple test script:
+
+```bash
+python test_wrigley_registration.py
 ```
 
 This processes two DEMs from the Wrigley landslide site and generates complete displacement analysis.

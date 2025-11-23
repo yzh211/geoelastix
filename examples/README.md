@@ -10,6 +10,17 @@ This directory contains example workflows demonstrating various GeoElastix featu
 | [batch_processing.py](#batch-processing) | Process multiple DEM pairs in sequence | Intermediate |
 | [python_api_example.py](#python-api-usage) | Use GeoElastix as Python library | Intermediate |
 
+## Testing & Validation Scripts
+
+Located in the project root directory:
+
+| Script | Description | Purpose |
+|--------|-------------|---------|
+| [quick_test.py](#quick-test-script) | Interactive installation validator | Verify setup before processing |
+| [test_wrigley_registration.py](#wrigley-test-script) | Automated Wrigley test | Simple workflow validation |
+| [benchmark_speed.py](#benchmark-script) | Performance measurement | Analyze processing times |
+| [test_itk_workflow.py](#itk-workflow-test) | ITK type validation | Verify ITK integration |
+
 ## Wrigley Landslide Example
 
 Complete example using real landslide data.
@@ -277,6 +288,176 @@ Good examples to contribute:
 - Advanced workflows (uncertainty analysis, time series)
 - Performance optimization techniques
 - Cloud processing examples
+
+## Quick Test Script
+
+**File**: `quick_test.py` (in project root)
+
+**What it does**:
+- Validates installation of all dependencies (NumPy, GDAL, ITK, Matplotlib)
+- Tests GeoElastix module imports
+- Checks for Wrigley example data files
+- Optionally runs full registration workflow with visualization
+- Provides interactive prompts and detailed feedback
+
+**How to use**:
+
+```bash
+python quick_test.py
+```
+
+**Test levels**:
+
+1. **Import Test**: Verifies all required Python packages
+2. **Module Test**: Confirms GeoElastix modules load correctly
+3. **Data Check**: Validates example data files exist
+4. **Registration Test**: (Optional) Runs complete Wrigley workflow
+
+**When to use**:
+- After initial installation to verify setup
+- After updating dependencies
+- Before processing important data
+- When troubleshooting installation issues
+
+**Output**: Interactive console output with ✓/✗ indicators and optional visualization plots.
+
+## Wrigley Test Script
+
+**File**: `test_wrigley_registration.py` (in project root)
+
+**What it does**:
+- Automated test of complete Wrigley registration workflow
+- No user interaction required (non-interactive mode)
+- Validates end-to-end pipeline
+
+**How to use**:
+
+```bash
+python test_wrigley_registration.py
+```
+
+**Use case**: Automated testing, CI/CD validation, quick verification of workflow functionality.
+
+**Output**: Log output to console, results saved to configured output directory.
+
+## Benchmark Script
+
+**File**: `benchmark_speed.py` (in project root)
+
+**What it does**:
+- Measures execution time of each workflow component
+- Analyzes I/O operations, ITK conversion, registration, and displacement calculation
+- Estimates full workflow time based on component measurements
+- Provides performance analysis and bottleneck identification
+
+**How to use**:
+
+```bash
+python benchmark_speed.py
+```
+
+**Benchmark components**:
+
+1. **I/O Operations**: Reading raster files with GDAL
+2. **ITK Conversion**: Array to ITK image conversion
+3. **Registration**: Two-pass elastix registration (core algorithm)
+4. **Displacement Calculation**: Displacement field computation
+
+**Output**: Detailed timing report showing:
+- Individual component times
+- Core registration percentage of total time
+- Estimated full workflow time
+- Performance analysis and recommendations
+
+**When to use**:
+- Evaluating hardware performance
+- Comparing different systems
+- Identifying performance bottlenecks
+- Planning processing time for large datasets
+
+**Sample output**:
+```
+BENCHMARK SUMMARY
+======================================================================
+I/O (read 2 rasters)        :   12.5 sec
+ITK conversion (2 images)   :    2.3 sec
+Registration (2-pass)       :  145.2 sec  ⭐ CORE ALGORITHM
+Displacement calc (1 field) :    5.8 sec
+----------------------------------------------------------------------
+Core registration total     :  160.0 sec ( 2.67 min)
+
+Estimated full workflow     :  330.0 sec ( 5.50 min)
+```
+
+## ITK Workflow Test
+
+**File**: `test_itk_workflow.py` (in project root)
+
+**What it does**:
+- Validates ITK type definitions (itk.F for float, itk.UC for unsigned char)
+- Tests array-to-ITK-image conversion
+- Verifies MHD file read/write with correct types
+- Tests parameter object loading
+
+**How to use**:
+
+```bash
+python test_itk_workflow.py
+```
+
+**Tests performed**:
+
+1. **Type Verification**: Confirms itk.F and itk.UC are available
+2. **Array Conversion**: Tests data and mask conversion with correct dtypes
+3. **MHD I/O**: Validates MetaImage format handling
+4. **Parameter Loading**: Tests elastix parameter object creation
+
+**When to use**:
+- After ITK installation to verify correct setup
+- When debugging type-related errors
+- Before running ITK-dependent workflows
+- When troubleshooting MHD file issues
+
+**Output**: Test results with ✓/✗ indicators for each test, creates temporary files in `test_output/` directory.
+
+## Using Test Scripts in Your Workflow
+
+### Recommended Testing Sequence
+
+**1. Initial Setup Validation**:
+```bash
+# Step 1: Validate ITK installation
+python test_itk_workflow.py
+
+# Step 2: Comprehensive installation check
+python quick_test.py
+
+# Step 3: (Optional) Performance baseline
+python benchmark_speed.py
+```
+
+**2. Before Production Processing**:
+```bash
+# Quick validation
+python test_wrigley_registration.py
+```
+
+**3. Troubleshooting**:
+```bash
+# Isolate ITK issues
+python test_itk_workflow.py
+
+# Check all dependencies
+python quick_test.py
+```
+
+### Integration with Development
+
+Test scripts can be integrated into:
+- **Pre-commit hooks**: Run `test_itk_workflow.py` before commits
+- **CI/CD pipelines**: Execute `test_wrigley_registration.py` in automated builds
+- **Performance monitoring**: Track benchmark results over time
+- **Installation validation**: Include `quick_test.py` in setup instructions
 
 ## License
 

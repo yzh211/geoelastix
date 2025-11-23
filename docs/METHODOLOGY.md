@@ -595,25 +595,29 @@ mask_result = mask_fixed AND mask_moving AND mask_registered
 
 ## References
 
+### GeoElastix Methodology
+
+1. **GeoElastix Application**: Zhu, Y., Dortch, J. M., & Haneberg, W. C. (2022). Non-affine georectification to improve the topographic fidelity of legacy geologic maps. International Journal of Applied Earth Observation and Geoinformation, 115, 103127. https://doi.org/10.1016/j.jag.2022.103127
+
 ### Core Algorithms
 
-1. **Elastix**: Klein, S., Staring, M., Murphy, K., Viergever, M. A., & Pluim, J. P. (2010). elastix: a toolbox for intensity-based medical image registration. IEEE transactions on medical imaging, 29(1), 196-205.
+2. **Elastix**: Klein, S., Staring, M., Murphy, K., Viergever, M. A., & Pluim, J. P. (2010). elastix: a toolbox for intensity-based medical image registration. IEEE transactions on medical imaging, 29(1), 196-205.
 
-2. **ITK**: Yoo, T. S., et al. (2002). Engineering and algorithm design for an image processing API: a technical report on ITK-the insight toolkit. Studies in health technology and informatics, 586-592.
+3. **ITK**: Yoo, T. S., et al. (2002). Engineering and algorithm design for an image processing API: a technical report on ITK-the insight toolkit. Studies in health technology and informatics, 586-592.
 
-3. **B-Spline Registration**: Rueckert, D., et al. (1999). Nonrigid registration using free-form deformations: application to breast MR images. IEEE Transactions on Medical Imaging, 18(8), 712-721.
+4. **B-Spline Registration**: Rueckert, D., et al. (1999). Nonrigid registration using free-form deformations: application to breast MR images. IEEE Transactions on Medical Imaging, 18(8), 712-721.
 
 ### Geospatial Applications
 
-4. **DEM Co-registration**: Nuth, C., & Kääb, A. (2011). Co-registration and bias corrections of satellite elevation data sets for quantifying glacier thickness change. The Cryosphere, 5(1), 271-290.
+5. **DEM Co-registration**: Nuth, C., & Kääb, A. (2011). Co-registration and bias corrections of satellite elevation data sets for quantifying glacier thickness change. The Cryosphere, 5(1), 271-290.
 
-5. **Landslide Monitoring**: Stumpf, A., et al. (2014). Image-based mapping of surface fissures for the investigation of landslide dynamics. Geomorphology, 186, 12-27.
+6. **Landslide Monitoring**: Stumpf, A., et al. (2014). Image-based mapping of surface fissures for the investigation of landslide dynamics. Geomorphology, 186, 12-27.
 
 ### Quality Metrics
 
-6. **Mutual Information**: Viola, P., & Wells III, W. M. (1997). Alignment by maximization of mutual information. International journal of computer vision, 24(2), 137-154.
+7. **Mutual Information**: Viola, P., & Wells III, W. M. (1997). Alignment by maximization of mutual information. International journal of computer vision, 24(2), 137-154.
 
-7. **Dice Coefficient**: Dice, L. R. (1945). Measures of the amount of ecologic association between species. Ecology, 26(3), 297-302.
+8. **Dice Coefficient**: Dice, L. R. (1945). Measures of the amount of ecologic association between species. Ecology, 26(3), 297-302.
 
 ## Appendix: Parameter Files
 

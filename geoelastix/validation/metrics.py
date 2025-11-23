@@ -11,7 +11,7 @@ class QualityMetrics:
     """
     Compute quality metrics for registration validation.
 
-    Provides RMSE, Mutual Information, Dice coefficient, and coverage analysis.
+    Provides Mutual Information, Dice coefficient, and coverage analysis.
     """
 
     @staticmethod
@@ -388,15 +388,15 @@ class QualityMetrics:
 
         metrics = {}
 
-        # RMSE
-        try:
-            rmse_metrics = QualityMetrics.compute_rmse(
-                fixed_array, registered_array, mask=overlap_mask
-            )
-            metrics.update(rmse_metrics)
-        except Exception as e:
-            logger.error(f"RMSE computation failed: {e}")
-            metrics.update({'rmse': np.nan, 'mae': np.nan})
+        # RMSE - DISABLED (not meaningful for DEM registration)
+        # try:
+        #     rmse_metrics = QualityMetrics.compute_rmse(
+        #         fixed_array, registered_array, mask=overlap_mask
+        #     )
+        #     metrics.update(rmse_metrics)
+        # except Exception as e:
+        #     logger.error(f"RMSE computation failed: {e}")
+        #     metrics.update({'rmse': np.nan, 'mae': np.nan})
 
         # Mutual Information
         try:
@@ -408,15 +408,15 @@ class QualityMetrics:
             logger.error(f"MI computation failed: {e}")
             metrics.update({'mutual_information': np.nan, 'normalized_mi': np.nan})
 
-        # Correlation
-        try:
-            corr_metrics = QualityMetrics.compute_correlation(
-                fixed_array, registered_array, mask=overlap_mask
-            )
-            metrics.update(corr_metrics)
-        except Exception as e:
-            logger.error(f"Correlation computation failed: {e}")
-            metrics.update({'pearson_r': np.nan, 'r_squared': np.nan})
+        # Correlation - DISABLED (not meaningful for DEM registration)
+        # try:
+        #     corr_metrics = QualityMetrics.compute_correlation(
+        #         fixed_array, registered_array, mask=overlap_mask
+        #     )
+        #     metrics.update(corr_metrics)
+        # except Exception as e:
+        #     logger.error(f"Correlation computation failed: {e}")
+        #     metrics.update({'pearson_r': np.nan, 'r_squared': np.nan})
 
         # Dice coefficient and coverage (if masks provided)
         if fixed_mask is not None and registered_mask is not None:

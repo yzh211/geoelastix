@@ -90,18 +90,22 @@ class ReportGenerator:
         lines.append("REGISTRATION QUALITY METRICS")
         lines.append("-"*80)
 
-        if 'rmse' in metrics:
-            lines.append(f"  Root Mean Square Error (RMSE):     {metrics['rmse']:.6f}")
-        if 'mae' in metrics:
-            lines.append(f"  Mean Absolute Error (MAE):         {metrics['mae']:.6f}")
+        # RMSE and MAE removed - not meaningful for DEM registration
+        # if 'rmse' in metrics:
+        #     lines.append(f"  Root Mean Square Error (RMSE):     {metrics['rmse']:.6f}")
+        # if 'mae' in metrics:
+        #     lines.append(f"  Mean Absolute Error (MAE):         {metrics['mae']:.6f}")
+
         if 'mutual_information' in metrics:
             lines.append(f"  Mutual Information (MI):           {metrics['mutual_information']:.6f}")
         if 'normalized_mi' in metrics:
             lines.append(f"  Normalized MI:                     {metrics['normalized_mi']:.6f}")
-        if 'pearson_r' in metrics:
-            lines.append(f"  Correlation (Pearson r):           {metrics['pearson_r']:.6f}")
-        if 'r_squared' in metrics:
-            lines.append(f"  R² (coefficient of determination): {metrics['r_squared']:.6f}")
+
+        # Correlation removed - not meaningful for DEM registration
+        # if 'pearson_r' in metrics:
+        #     lines.append(f"  Correlation (Pearson r):           {metrics['pearson_r']:.6f}")
+        # if 'r_squared' in metrics:
+        #     lines.append(f"  R² (coefficient of determination): {metrics['r_squared']:.6f}")
 
         lines.append("")
 
@@ -203,8 +207,8 @@ class ReportGenerator:
         lines.append("https://github.com/yzh211/geoelastix")
         lines.append("")
 
-        # Write to file
-        with open(output_path, 'w') as f:
+        # Write to file (use UTF-8 encoding for Unicode characters)
+        with open(output_path, 'w', encoding='utf-8') as f:
             f.write('\n'.join(lines))
 
         logger.info(f"Text report saved to: {output_path}")

@@ -105,6 +105,13 @@ For more information, visit: https://github.com/yzh211/geoelastix
         help='Logging level'
     )
 
+    register_parser.add_argument(
+        '--log-to-console',
+        action='store_true',
+        default=False,
+        help='Output logs to console (default: False)'
+    )
+
     # List methods command
     list_parser = subparsers.add_parser(
         'list-methods',
@@ -161,7 +168,7 @@ def cmd_register(args):
     args : argparse.Namespace
         Command arguments
     """
-    logger = setup_logging(log_level=args.log_level)
+    logger = setup_logging(log_level=args.log_level, log_to_console=args.log_to_console)
 
     logger.info("="*70)
     logger.info(f"GEOELASTIX v{__version__}")
@@ -194,7 +201,8 @@ def cmd_register(args):
                     'method': args.method
                 },
                 'logging': {
-                    'level': args.log_level
+                    'level': args.log_level,
+                    'log_to_console': args.log_to_console
                 }
             })
 

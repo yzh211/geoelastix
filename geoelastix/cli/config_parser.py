@@ -29,6 +29,7 @@ class ConfigParser:
             'method': 'NA',
             'metric': 'NCC',
             'parameter_file': None,
+            'log_to_console': False,
         },
         'processing': {
             'tile_threshold': 5000,
@@ -64,6 +65,7 @@ class ConfigParser:
         'logging': {
             'level': 'INFO',
             'save_to_file': True,
+            'log_to_console': True,
         }
     }
 
@@ -228,6 +230,11 @@ class ConfigParser:
             if log_level not in valid_levels:
                 errors.append(f"Invalid log level: {log_level}. Must be one of {valid_levels}")
 
+            # Validate log_to_console is boolean
+            log_to_console = config['logging'].get('log_to_console', False)
+            if not isinstance(log_to_console, bool):
+                errors.append(f"log_to_console must be a boolean (true/false), got: {log_to_console}")
+
         # Report errors
         if errors:
             error_msg = "Configuration validation failed:\n" + "\n".join(f"  - {e}" for e in errors)
@@ -293,6 +300,7 @@ registration:
   method: "NA"                          # NA, AF, RG, or TS
   metric: "NCC"                         # NCC or MI
   parameter_file: null                  # Optional custom parameter file
+  log_to_console: false                 # Show elastix registration output (default: false)
 
 processing:
   tile_threshold: 5000                  # Enable tiling if dimension > this
@@ -333,6 +341,7 @@ quality:
 logging:
   level: "INFO"                         # DEBUG, INFO, WARNING, ERROR
   save_to_file: true                    # Save log to file
+  log_to_console: true                  # Output logs to console (default: true)
 """
 
         with open(output_path, 'w') as f:

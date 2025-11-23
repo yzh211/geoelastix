@@ -6,10 +6,9 @@ This guide provides detailed instructions for installing GeoElastix on various p
 
 - [System Requirements](#system-requirements)
 - [Installation Methods](#installation-methods)
-  - [Option 1: Conda Installation (Recommended)](#option-1-conda-installation-recommended)
-  - [Option 2: Pip Installation](#option-2-pip-installation)
-  - [Option 3: From Source](#option-3-from-source)
+  - [Recommended Installation](#recommended-installation)
 - [Verify Installation](#verify-installation)
+- [Platform-Specific Notes](#platform-specific-notes)
 - [Troubleshooting](#troubleshooting)
 
 ## System Requirements
@@ -27,79 +26,17 @@ This guide provides detailed instructions for installing GeoElastix on various p
 
 ## Installation Methods
 
-### Option 1: Conda Installation (Recommended)
+### Recommended Installation
 
-Conda installation is recommended because it automatically handles GDAL and other complex dependencies.
+The recommended installation method uses the provided `environment.yml` file, which automatically handles all dependencies including GDAL, ITK, and other complex packages.
 
 #### Step 1: Install Conda
 
 If you don't have Conda installed, download and install either:
-- **Miniconda** (minimal installation): https://docs.conda.io/en/latest/miniconda.html
+- **Miniconda** (minimal installation, recommended): https://docs.conda.io/en/latest/miniconda.html
 - **Anaconda** (includes many scientific packages): https://www.anaconda.com/download
 
-#### Step 2: Create Environment
-
-```bash
-# Create a new conda environment for GeoElastix
-conda create -n geoelastix python=3.10
-
-# Activate the environment
-conda activate geoelastix
-```
-
-#### Step 3: Install Dependencies
-
-```bash
-# Install GDAL (critical for geospatial operations)
-conda install -c conda-forge gdal
-
-# Install ITK and itk-elastix
-conda install -c conda-forge itk itk-elastix
-
-# Install other dependencies
-conda install -c conda-forge numpy scipy matplotlib pyyaml pillow reportlab
-```
-
-#### Step 4: Install GeoElastix
-
-```bash
-# Clone the repository
-git clone https://github.com/yzh211/geoelastix.git
-cd geoelastix
-
-# Install in development mode
-pip install -e .
-```
-
-#### Step 5: Verify Installation
-
-```bash
-# Check version
-geoelastix --version
-
-# List available methods
-geoelastix list-methods
-```
-
-### Option 2: Pip Installation
-
-If you prefer pip and already have GDAL installed system-wide:
-
-```bash
-# Install from GitHub
-pip install git+https://github.com/yzh211/geoelastix.git
-
-# Or clone and install locally
-git clone https://github.com/yzh211/geoelastix.git
-cd geoelastix
-pip install .
-```
-
-**Note**: You must have GDAL installed and properly configured before using pip installation.
-
-### Option 3: From Source
-
-For development or customization:
+#### Step 2: Clone Repository and Create Environment
 
 ```bash
 # Clone the repository
@@ -109,14 +46,34 @@ cd geoelastix
 # Create and activate conda environment
 conda env create -f environment.yml
 conda activate geoelastix
+```
 
-# Install in development mode
-pip install -e .
+The `environment.yml` file automatically installs:
+- Python 3.10
+- GDAL (geospatial data I/O)
+- ITK and itk-elastix (registration engine)
+- NumPy, SciPy, Matplotlib (scientific computing and visualization)
+- PyYAML (configuration parsing)
+- All other required dependencies
+
+#### Step 3: Verify Installation
+
+```bash
+# Check version
+geoelastix --version
+
+# List available methods
+geoelastix list-methods
+
+# Run quick test
+python quick_test.py
 ```
 
 ## Verify Installation
 
 After installation, verify that GeoElastix is working correctly:
+
+### Basic Verification
 
 ```bash
 # Check version
@@ -133,11 +90,23 @@ geoelastix list-methods
 #   AF: Affine Registration
 #   RG: Rigid/Euler Registration
 #   TS: Translation-only Registration
-
-# Create a configuration template
-geoelastix create-config --output test_config.yaml
-# Should create test_config.yaml in current directory
 ```
+
+### Comprehensive Testing
+
+Run the quick test script to validate all components:
+
+```bash
+python quick_test.py
+```
+
+This will:
+- Test all dependency imports (NumPy, GDAL, ITK, Matplotlib)
+- Verify GeoElastix modules load correctly
+- Check for example data files
+- Optionally run a complete registration workflow
+
+See the [Testing & Validation](../examples/README.md#testing--validation-scripts) section for more testing options.
 
 ## Platform-Specific Notes
 

@@ -14,11 +14,11 @@ registration:
   method: "NA"              # Non-Affine (deformable) registration
   metric: "NCC"             # Normalized Cross-Correlation
   parameter_file: null      # Use default NA_NCC_ASGD parameters
+  log_to_console: false     # Show elastix registration output (default: false)
 
 processing:
   tile_threshold: 5000      # Enable tiling if image dimension > 5000 pixels
   tile_overlap: 100         # Pixel overlap between tiles
-  num_threads: 4            # Number of parallel threads
 
 output:
   formats: ["geotiff", "asc"]   # Output displacement fields in both formats
@@ -51,3 +51,4 @@ quality:
 logging:
   level: "INFO"              # DEBUG, INFO, WARNING, ERROR
   save_to_file: true
+  log_to_console: true      # Output logs to console (default: false)

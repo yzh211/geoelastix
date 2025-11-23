@@ -21,7 +21,8 @@ class ContourPlot:
                            figsize=(10, 8), colormap='RdBu_r',
                            levels=20, mask=None, show_contour_lines=True,
                            colorbar_label="Displacement", vmin=None, vmax=None,
-                           center_zero=False):
+                           center_zero=False, pixel_spacing=None,
+                           geotransform=None):
         """
         Create filled contour plot.
 
@@ -51,6 +52,10 @@ class ContourPlot:
             Maximum value for color scale
         center_zero : bool, optional
             Center colormap at zero. Default: False
+        pixel_spacing : tuple, optional
+            Pixel spacing (dx, dy) in real-world units. Default: None (uses pixels)
+        geotransform : tuple, optional
+            GDAL geotransform. Default: None
 
         Returns
         -------
@@ -76,19 +81,63 @@ class ContourPlot:
             vmin = -abs_max
             vmax = abs_max
 
+        # Get dimensions
+        height, width = plot_data.shape
+
+        # Determine coordinate system and units
+        if pixel_spacing is not None:
+            # Use real-world coordinates
+            dx, dy = pixel_spacing
+            # Create extent for imshow-style display
+            # extent = [left, right, bottom, top]
+            # For DEM: x from 0 to width*dx, y from height*dy to 0 (flipped)
+            extent = [0, width * dx, height * abs(dy), 0]
+
+            # Determine units
+            if abs(dx) > 1.0:  # Assume feet or meters
+                if abs(dx) < 100:
+                    unit = 'm'
+                else:
+                    unit = 'ft'
+            else:
+                unit = 'deg'
+
+            xlabel = f'Easting ({unit})'
+            ylabel = f'Northing ({unit})'
+
+            # Update colorbar label with units if not already specified
+            if colorbar_label == "Displacement" and unit != 'pixels':
+                colorbar_label = f'Displacement ({unit})'
+        else:
+            # Use pixel coordinates
+            extent = [0, width, height, 0]
+            unit = 'pixels'
+            xlabel = 'X (pixels)'
+            ylabel = 'Y (pixels)'
+
         # Create figure
         fig, ax = plt.subplots(figsize=figsize, dpi=dpi)
 
         # Create contour levels
         contour_levels = np.linspace(vmin, vmax, levels)
 
+        # Create coordinate grids for contour plotting
+        if pixel_spacing is not None:
+            x = np.linspace(0, width * dx, width)
+            y = np.linspace(0, height * abs(dy), height)
+        else:
+            x = np.arange(width)
+            y = np.arange(height)
+
+        X, Y = np.meshgrid(x, y)
+
         # Filled contours
-        cf = ax.contourf(plot_data, levels=contour_levels, cmap=colormap,
+        cf = ax.contourf(X, Y, plot_data, levels=contour_levels, cmap=colormap,
                         vmin=vmin, vmax=vmax, extend='both')
 
         # Contour lines
         if show_contour_lines:
-            cs = ax.contour(plot_data, levels=contour_levels[::2],
+            cs = ax.contour(X, Y, plot_data, levels=contour_levels[::2],
                            colors='black', linewidths=0.5, alpha=0.3)
             ax.clabel(cs, inline=True, fontsize=8, fmt='%.2f')
 
@@ -96,12 +145,15 @@ class ContourPlot:
         cbar = plt.colorbar(cf, ax=ax, label=colorbar_label)
 
         # Labels and title
-        ax.set_xlabel('X (pixels)')
-        ax.set_ylabel('Y (pixels)')
+        ax.set_xlabel(xlabel)
+        ax.set_ylabel(ylabel)
         ax.set_title(title, fontsize=14, fontweight='bold')
 
         # Set aspect ratio
         ax.set_aspect('equal')
+
+        # Invert y-axis for DEM convention (North up)
+        ax.invert_yaxis()
 
         plt.tight_layout()
 

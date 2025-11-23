@@ -20,7 +20,8 @@ class QuiverPlot:
     def create_quiver_plot(displacement_x, displacement_y, subsample=50,
                           title="Horizontal Displacement", dpi=300,
                           figsize=(10, 8), colormap='viridis',
-                          scale=None, mask=None):
+                          scale=None, mask=None, pixel_spacing=None,
+                          geotransform=None):
         """
         Create quiver plot from displacement fields.
 
@@ -44,6 +45,10 @@ class QuiverPlot:
             Arrow scale. If None, auto-computed.
         mask : numpy.ndarray, optional
             Binary mask for valid regions
+        pixel_spacing : tuple, optional
+            Pixel spacing (dx, dy) in real-world units. Default: None (uses pixels)
+        geotransform : tuple, optional
+            GDAL geotransform. Default: None
 
         Returns
         -------
@@ -65,9 +70,33 @@ class QuiverPlot:
         # Get dimensions
         height, width = displacement_x.shape
 
-        # Create coordinate grids (subsampled)
-        y_coords = np.arange(0, height, subsample)
-        x_coords = np.arange(0, width, subsample)
+        # Determine coordinate system and units
+        if pixel_spacing is not None:
+            # Use real-world coordinates
+            dx, dy = pixel_spacing
+            # For DEM convention: origin at top-left, Y increases downward
+            x_coords = np.arange(0, width, subsample) * dx
+            y_coords = np.arange(0, height, subsample) * dy
+
+            # Determine units
+            # Note: For US data, spacing is typically in feet (e.g., 30 ft)
+            # For metric data, spacing would be in meters (e.g., 10 m)
+            # Default to feet for typical DEM spacing values > 1
+            if abs(dx) > 1.0:  # Assume feet or meters
+                unit = 'ft'  # Default to feet for US standard data
+            else:
+                unit = 'deg'  # Geographic coordinates
+
+            xlabel = f'Easting ({unit})'
+            ylabel = f'Northing ({unit})'
+        else:
+            # Use pixel coordinates
+            x_coords = np.arange(0, width, subsample)
+            y_coords = np.arange(0, height, subsample)
+            unit = 'pixels'
+            xlabel = 'X (pixels)'
+            ylabel = 'Y (pixels)'
+
         X, Y = np.meshgrid(x_coords, y_coords)
 
         # Subsample displacement fields
@@ -81,9 +110,11 @@ class QuiverPlot:
         fig, ax = plt.subplots(figsize=figsize, dpi=dpi)
 
         # Plot quiver
-        # Note: V is inverted for image coordinates (y increases downward)
+        # Match reference code convention: negate X, negate Y for inverted axis
+        # Reference code: plt.quiver(..., -x, y, ...) with normal axis
+        # Since we use invert_yaxis(), we need to negate V as well
         quiver = ax.quiver(
-            X, Y, U, -V,  # Invert V for image coordinates
+            X, Y, -U, -V,
             magnitude,
             cmap=colormap,
             scale=scale,
@@ -93,17 +124,18 @@ class QuiverPlot:
         )
 
         # Colorbar
-        cbar = plt.colorbar(quiver, ax=ax, label='Displacement Magnitude')
+        cbar_label = f'Displacement Magnitude ({unit})' if unit != 'pixels' else 'Displacement Magnitude'
+        cbar = plt.colorbar(quiver, ax=ax, label=cbar_label)
 
         # Labels and title
-        ax.set_xlabel('X (pixels)')
-        ax.set_ylabel('Y (pixels)')
+        ax.set_xlabel(xlabel)
+        ax.set_ylabel(ylabel)
         ax.set_title(title, fontsize=14, fontweight='bold')
 
         # Set aspect ratio
         ax.set_aspect('equal')
 
-        # Invert y-axis to match image coordinates
+        # Invert y-axis for DEM convention (North up, origin top-left)
         ax.invert_yaxis()
 
         # Grid
@@ -185,8 +217,9 @@ class QuiverPlot:
         V = disp_y[::subsample, ::subsample]
 
         # Plot quiver
+        # Match reference code convention: negate X, negate Y for inverted axis
         ax.quiver(
-            X, Y, U, -V,  # Invert V for image coordinates
+            X, Y, -U, -V,  # -x for geo convention, -y for inverted axis
             color=arrow_color,
             scale=scale,
             scale_units='xy' if scale else 'width',
@@ -265,7 +298,8 @@ class QuiverPlot:
 
         # Compute magnitude and direction
         magnitude = np.sqrt(displacement_x**2 + displacement_y**2)
-        direction = np.arctan2(displacement_y, displacement_x)  # radians
+        # Match reference convention: use -displacement_x for direction calculation
+        direction = np.arctan2(displacement_y, -displacement_x)  # radians
 
         # Apply mask
         if mask is not None:
@@ -350,7 +384,8 @@ class QuiverPlot:
             return None
 
         # Compute directions (in radians, then degrees)
-        directions = np.arctan2(dy, dx)
+        # Match reference convention: use -dx for direction calculation
+        directions = np.arctan2(dy, -dx)
         directions_deg = (np.degrees(directions) + 360) % 360  # 0-360
 
         # Compute magnitudes

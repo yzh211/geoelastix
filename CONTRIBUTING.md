@@ -97,18 +97,12 @@ git remote add upstream https://github.com/yzh211/geoelastix.git
 ### 2. Create Environment
 
 ```bash
-# Create conda environment
-conda create -n geoelastix-dev python=3.10
-conda activate geoelastix-dev
-
-# Install dependencies
-conda install -c conda-forge gdal itk itk-elastix numpy scipy matplotlib pyyaml pillow reportlab
+# Create and activate conda environment from environment.yml
+conda env create -f environment.yml
+conda activate geoelastix
 
 # Install development dependencies
 pip install pytest pytest-cov black flake8 isort mypy
-
-# Install GeoElastix in development mode
-pip install -e .
 ```
 
 ### 3. Create Branch
@@ -558,6 +552,12 @@ For maintainers:
 - Check existing issues and documentation
 - Ask in issue comments
 - Open a discussion on GitHub
+
+## Citation
+
+If you use GeoElastix in your research or build upon it, please cite the original methodology paper:
+
+Zhu, Y., Dortch, J. M., & Haneberg, W. C. (2022). Non-affine georectification to improve the topographic fidelity of legacy geologic maps. *International Journal of Applied Earth Observation and Geoinformation*, 115, 103127. https://doi.org/10.1016/j.jag.2022.103127
 
 ## License
 

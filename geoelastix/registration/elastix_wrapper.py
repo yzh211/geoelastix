@@ -29,7 +29,8 @@ class ElastixWrapper:
         logger.info("Initialized ElastixWrapper")
 
     def register(self, fixed_image, moving_image, fixed_mask=None,
-                 moving_mask=None, log_to_console=False):
+                 moving_mask=None, log_to_console=False,
+                 use_transformix_workaround=False):
         """
         Perform image registration using elastix.
 
@@ -45,6 +46,10 @@ class ElastixWrapper:
             Binary mask for moving image (uint8)
         log_to_console : bool, optional
             Enable elastix console logging. Default: False
+        use_transformix_workaround : bool, optional
+            Apply transformix_filter after registration as workaround for
+            potential pixel buffer issues. This doubles registration time
+            but may be needed for some datasets. Default: False
 
         Returns
         -------
@@ -55,27 +60,29 @@ class ElastixWrapper:
         """
         logger.info("Starting elastix registration...")
 
-        # Log image information
-        fixed_array = itk.array_from_image(fixed_image)
-        moving_array = itk.array_from_image(moving_image)
+        # Validate inputs
+        if moving_image is None:
+            raise ValueError("moving_image is None - cannot perform registration")
+        if fixed_image is None:
+            raise ValueError("fixed_image is None - cannot perform registration")
 
-        logger.info(f"  Fixed image shape: {fixed_array.shape}")
-        logger.info(f"  Moving image shape: {moving_array.shape}")
+        # Log image information (get size from ITK image, no conversion needed)
+        fixed_size = fixed_image.GetLargestPossibleRegion().GetSize()
+        moving_size = moving_image.GetLargestPossibleRegion().GetSize()
+
+        logger.info(f"  Fixed image shape: ({fixed_size[1]}, {fixed_size[0]})")
+        logger.info(f"  Moving image shape: ({moving_size[1]}, {moving_size[0]})")
 
         if fixed_mask is not None:
-            mask_array = itk.array_from_image(fixed_mask)
-            valid_percent = (np.sum(mask_array) / mask_array.size) * 100
-            logger.info(f"  Fixed mask: {valid_percent:.1f}% valid data")
+            logger.info(f"  Fixed mask: provided")
 
         if moving_mask is not None:
-            mask_array = itk.array_from_image(moving_mask)
-            valid_percent = (np.sum(mask_array) / mask_array.size) * 100
-            logger.info(f"  Moving mask: {valid_percent:.1f}% valid data")
+            logger.info(f"  Moving mask: provided")
 
         try:
             # Perform registration
             if fixed_mask is not None and moving_mask is not None:
-                registered_image, transform_parameters = itk.elastix_registration_method(
+                result_image, transform_parameters = itk.elastix_registration_method(
                     fixed_image,
                     moving_image,
                     parameter_object=self.parameter_object,
@@ -84,7 +91,7 @@ class ElastixWrapper:
                     log_to_console=log_to_console
                 )
             elif fixed_mask is not None:
-                registered_image, transform_parameters = itk.elastix_registration_method(
+                result_image, transform_parameters = itk.elastix_registration_method(
                     fixed_image,
                     moving_image,
                     parameter_object=self.parameter_object,
@@ -92,7 +99,7 @@ class ElastixWrapper:
                     log_to_console=log_to_console
                 )
             else:
-                registered_image, transform_parameters = itk.elastix_registration_method(
+                result_image, transform_parameters = itk.elastix_registration_method(
                     fixed_image,
                     moving_image,
                     parameter_object=self.parameter_object,
@@ -100,6 +107,41 @@ class ElastixWrapper:
                 )
 
             logger.info("Registration completed successfully")
+
+            # Check if result_image has valid pixel data
+            # When WriteResultImage="false", elastix returns an image object but
+            # with no pixel buffer, so we must use transformix to generate it
+            result_has_data = False
+            if result_image is not None:
+                try:
+                    test_array = itk.array_from_image(result_image)
+                    result_has_data = (test_array is not None)
+                except:
+                    result_has_data = False
+
+            if not result_has_data or use_transformix_workaround:
+                if not result_has_data:
+                    logger.info("Result image has no pixel data, applying transform with transformix...")
+                else:
+                    logger.info("Applying transformix workaround for pixel buffer...")
+
+                registered_image = itk.transformix_filter(
+                    moving_image,
+                    transform_parameters,
+                    log_to_console=log_to_console
+                )
+                if registered_image is None:
+                    raise ValueError("transformix returned None for registered image")
+
+                # Verify the transformix result has data
+                test_array = itk.array_from_image(registered_image)
+                if test_array is None:
+                    raise ValueError("transformix result has no pixel data")
+
+                logger.info("✓ Registered image generated with transformix")
+            else:
+                registered_image = result_image
+                logger.info("✓ Using registered image from elastix")
 
             return registered_image, transform_parameters
 

@@ -6,7 +6,7 @@ from pathlib import Path
 from datetime import datetime
 
 
-def setup_logging(log_level="INFO", log_file=None, log_dir=None):
+def setup_logging(log_level="INFO", log_file=None, log_dir=None, log_to_console=True):
     """
     Set up logging configuration for GeoElastix.
 
@@ -19,6 +19,8 @@ def setup_logging(log_level="INFO", log_file=None, log_dir=None):
     log_dir : str or Path, optional
         Directory for log file. If provided with log_file=None, creates
         default log file name with timestamp.
+    log_to_console : bool, optional
+        Whether to log to console. Default: True
 
     Returns
     -------
@@ -42,11 +44,12 @@ def setup_logging(log_level="INFO", log_file=None, log_dir=None):
         datefmt='%Y-%m-%d %H:%M:%S'
     )
 
-    # Console handler
-    console_handler = logging.StreamHandler(sys.stdout)
-    console_handler.setLevel(getattr(logging, log_level.upper()))
-    console_handler.setFormatter(console_formatter)
-    logger.addHandler(console_handler)
+    # Console handler (if enabled)
+    if log_to_console:
+        console_handler = logging.StreamHandler(sys.stdout)
+        console_handler.setLevel(getattr(logging, log_level.upper()))
+        console_handler.setFormatter(console_formatter)
+        logger.addHandler(console_handler)
 
     # File handler (if requested)
     if log_file is not None or log_dir is not None:

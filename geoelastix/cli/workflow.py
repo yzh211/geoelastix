@@ -4,7 +4,6 @@ import logging
 from pathlib import Path
 from datetime import datetime
 import numpy as np
-import itk
 
 from ..io import RasterIO, NoDataHandler, CRSManager
 from ..registration import ElastixWrapper, TwoPassRegistration, ParameterManager
@@ -124,7 +123,8 @@ class WorkflowOrchestrator:
             # Reconfigure logging with file
             setup_logging(
                 log_level=self.config['logging']['level'],
-                log_file=log_file
+                log_file=log_file,
+                log_to_console=self.config['logging']['log_to_console']
             )
 
     def _load_input_data(self):
@@ -176,18 +176,24 @@ class WorkflowOrchestrator:
         logger.info("STEP 3: Perform Registration")
         logger.info("="*70)
 
-        # Convert to ITK images
+        # Convert to ITK images using proper types
+        # Note: Spacing=[1,1] in pixel units is correct for registration
+        # Physical spacing only matters for displacement measurements
         logger.info("\nConverting to ITK format...")
-        fixed_itk = RasterIO.array_to_itk_image(
-            self.fixed_array, spacing=self.pixel_spacing
+        self.fixed_itk = RasterIO.array_to_itk_image(
+            self.fixed_array, is_mask=False
         )
         moving_itk = RasterIO.array_to_itk_image(
-            self.moving_array, spacing=self.pixel_spacing
+            self.moving_array, is_mask=False
         )
 
-        # Convert masks
-        fixed_mask_itk = itk.image_from_array(self.fixed_mask.astype(np.uint8))
-        moving_mask_itk = itk.image_from_array(self.moving_mask.astype(np.uint8))
+        # Convert masks using proper types (itk.UC)
+        fixed_mask_itk = RasterIO.array_to_itk_image(
+            self.fixed_mask, is_mask=True
+        )
+        moving_mask_itk = RasterIO.array_to_itk_image(
+            self.moving_mask, is_mask=True
+        )
 
         # Get parameter object
         method = self.config['registration']['method']
@@ -203,10 +209,10 @@ class WorkflowOrchestrator:
         two_pass = TwoPassRegistration(parameter_object)
 
         reg_results = two_pass.register(
-            fixed_itk, moving_itk,
+            self.fixed_itk, moving_itk,
             fixed_mask=fixed_mask_itk,
             moving_mask=moving_mask_itk,
-            log_to_console=False
+            log_to_console=self.config['registration']['log_to_console']
         )
 
         # Store results
@@ -227,7 +233,7 @@ class WorkflowOrchestrator:
         # Horizontal displacement (X, Y)
         logger.info("\nCalculating horizontal displacement...")
         horiz_result = HorizontalDisplacement.compute_from_transform(
-            self.registered_image,
+            self.fixed_itk,
             self.transform_parameters,
             spacing=self.pixel_spacing
         )
@@ -313,7 +319,9 @@ class WorkflowOrchestrator:
             fig = QuiverPlot.create_quiver_plot(
                 self.displacement_x, self.displacement_y,
                 subsample=subsample, dpi=dpi, colormap=colormap,
-                mask=self.fixed_mask
+                mask=self.fixed_mask,
+                pixel_spacing=self.pixel_spacing,
+                geotransform=self.fixed_geotransform
             )
             output_path = self.visualization_dir / 'horizontal_quiver.png'
             QuiverPlot.save_plot(fig, output_path)
@@ -336,7 +344,9 @@ class WorkflowOrchestrator:
                 fig = ContourPlot.create_contour_plot(
                     data, title=title, dpi=dpi, colormap=cmap,
                     mask=self.fixed_mask,
-                    center_zero=(ctype != 'contour_magnitude')
+                    center_zero=(ctype != 'contour_magnitude'),
+                    pixel_spacing=self.pixel_spacing,
+                    geotransform=self.fixed_geotransform
                 )
 
                 filename = f"{ctype.replace('contour_', 'displacement_')}_contour.png"

@@ -4,11 +4,10 @@
 [![Python](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
 [![Status](https://img.shields.io/badge/status-stable-green.svg)]()
 
-**Professional Geospatial Image Registration for Landslide Monitoring**
+**Geospatial Image Registration for Landslide Monitoring**
 
-GeoElastix is an open-source software for analyzing multi-temporal Digital Elevation Models (DEMs) to detect and quantify ground displacement in three dimensions. Specifically designed for landslide monitoring and ground deformation analysis.
+GeoElastix is an open-source software for analyzing multi-temporal Digital Elevation Models (DEMs) to detect and quantify ground displacement in three dimensions. 
 
-![GeoElastix Workflow](docs/images/workflow_diagram.png)
 
 ## Key Features
 
@@ -17,7 +16,7 @@ GeoElastix is an open-source software for analyzing multi-temporal Digital Eleva
 - **3D Displacement Analysis**: Calculates horizontal (X, Y) and vertical (Z) displacement fields with millimeter-level accuracy
 - **Multiple Registration Methods**: Four transformation models from rigid to free-form deformation
 - **Large Dataset Support**: Automatic tiled processing for images exceeding 5000×5000 pixels
-- **Professional Quality Assessment**: Comprehensive metrics including RMSE, Mutual Information, Dice coefficient
+- **Professional Quality Assessment**: Comprehensive metrics including Mutual Information, Dice coefficient, among others
 - **Rich Visualization**: Quiver plots, contour maps, rose diagrams, and multi-panel displays
 - **Automated Reporting**: Text and JSON reports with quality metrics and displacement statistics
 
@@ -28,27 +27,32 @@ GeoElastix is an open-source software for analyzing multi-temporal Digital Eleva
 - **Smart No-Data Management**: Automatic detection and proper propagation of invalid pixels
 - **CRS-Aware**: Automatic coordinate reference system validation and pixel spacing detection
 - **Multi-Resolution Optimization**: Pyramid-based coarse-to-fine registration strategy
-- **Two-Pass Registration**: Internal refinement for improved accuracy
 
 ## Quick Start
 
 ### Installation
 
 ```bash
-# Create conda environment
-conda create -n geoelastix python=3.10
-conda activate geoelastix
-
-# Install dependencies
-conda install -c conda-forge gdal itk itk-elastix numpy scipy matplotlib pyyaml
-
-# Clone and install GeoElastix
+# Clone the repository
 git clone https://github.com/yzh211/geoelastix.git
 cd geoelastix
-pip install -e .
+
+# Create and activate conda environment
+conda env create -f environment.yml
+conda activate geoelastix
 ```
 
 For detailed installation instructions, see [Installation Guide](docs/INSTALLATION.md).
+
+### Verify Installation
+
+After installation, test your setup:
+
+```bash
+python quick_test.py
+```
+
+This validates all dependencies and optionally runs a complete test workflow. See [Testing & Validation](#testing--validation) below.
 
 ### Basic Usage
 
@@ -158,6 +162,12 @@ cd examples/wrigley
 geoelastix register --config config_wrigley.yaml
 ```
 
+Or use the test script:
+
+```bash
+python quick_test.py
+```
+
 This demonstrates complete workflow from input DEMs to displacement analysis.
 
 ### Additional Examples
@@ -171,7 +181,7 @@ See `examples/` directory for:
 
 ## Configuration
 
-GeoElastix uses YAML configuration files for flexible control:
+GeoElastix uses YAML configuration files for flexible control (example):
 
 ```yaml
 job:
@@ -244,26 +254,11 @@ For detailed command usage: `geoelastix --help`
 
 GeoElastix computes comprehensive quality metrics:
 
-- **RMSE** (Root Mean Square Error): Pixel-wise difference between images
 - **Mutual Information**: Statistical dependency measure
 - **Dice Coefficient**: Overlap between valid data regions
-- **Pearson Correlation**: Linear correlation between intensities
 - **Coverage Statistics**: Valid pixel percentages and overlap
 
 Automatic warnings alert you to potential quality issues.
-
-## System Requirements
-
-### Minimum
-- **OS**: Windows 10+, Linux (Ubuntu 18.04+), macOS 10.14+
-- **Python**: 3.8 or higher
-- **RAM**: 8 GB
-- **Disk**: 2 GB + data storage
-
-### Recommended
-- **RAM**: 16 GB or more
-- **CPU**: Multi-core processor (4+ cores)
-- **Disk**: SSD with sufficient space
 
 ## Technology Stack
 
@@ -281,8 +276,6 @@ Typical processing times (4-core CPU):
 | Image Size | Method | Processing Time |
 |------------|--------|-----------------|
 | 1000×1000 | NA | 1-2 minutes |
-| 5000×5000 | NA | 10-15 minutes |
-| 10000×10000 (tiled) | NA | 30-60 minutes |
 
 Actual times vary based on hardware, overlap amount, and deformation complexity.
 
@@ -298,18 +291,6 @@ Actual times vary based on hardware, overlap amount, and deformation complexity.
 - **PNG** (visualizations)
 - **JSON** (metrics)
 - **TXT** (reports)
-
-## Use Cases
-
-GeoElastix is designed for:
-
-- **Landslide Monitoring**: Detect and quantify ground movement in unstable slopes
-- **Subsidence Analysis**: Measure vertical ground deformation
-- **Earthquake Deformation**: Analyze co-seismic and post-seismic displacement
-- **Glacier Movement**: Track ice flow and surface changes
-- **Volcano Monitoring**: Detect ground deformation around volcanic systems
-- **Infrastructure Monitoring**: Assess ground stability near structures
-- **Geomorphology Research**: Study landscape evolution and erosion
 
 ## Workflow
 
@@ -333,32 +314,6 @@ Ways to contribute:
 - Share example workflows
 - Add test cases
 
-## Development
-
-```bash
-# Clone repository
-git clone https://github.com/yzh211/geoelastix.git
-cd geoelastix
-
-# Create development environment
-conda env create -f environment.yml
-conda activate geoelastix
-
-# Install in development mode
-pip install -e .
-
-# Run tests
-pytest tests/
-```
-
-## Versioning
-
-GeoElastix follows [Semantic Versioning](https://semver.org/):
-- **Major**: Incompatible API changes
-- **Minor**: Backward-compatible functionality additions
-- **Patch**: Backward-compatible bug fixes
-
-Current version: **0.1.0** (Stable)
 
 ## Changelog
 
@@ -388,15 +343,20 @@ See [LICENSE](LICENSE) file for full terms.
 
 ## Citation
 
-If you use GeoElastix in your research, please cite:
+If you use GeoElastix in your research, please cite the following paper:
+
+**Primary Citation**:
 
 ```bibtex
-@software{geoelastix2024,
-  title = {GeoElastix: Geospatial Image Registration for Landslide Monitoring},
-  author = {GeoElastix Development Team},
-  year = {2024},
-  url = {https://github.com/yzh211/geoelastix},
-  version = {0.1.0}
+@article{zhu2022geoelastix,
+  title = {Non-affine georectification to improve the topographic fidelity of legacy geologic maps},
+  author = {Zhu, Y. and Dortch, J. M. and Haneberg, W. C.},
+  journal = {International Journal of Applied Earth Observation and Geoinformation},
+  volume = {115},
+  pages = {103127},
+  year = {2022},
+  doi = {https://doi.org/10.1016/j.jag.2022.103127},
+  url = {https://www.sciencedirect.com/science/article/pii/S1569843222003089}
 }
 ```
 
@@ -420,24 +380,6 @@ Special thanks to the open-source geospatial and image processing communities.
 - **Examples**: Review `examples/` directory
 - **GitHub Issues**: Search or create issue for bugs/questions
 
-### Reporting Issues
-
-When reporting bugs, please include:
-- GeoElastix version (`geoelastix --version`)
-- Operating system and Python version
-- Input data characteristics (size, format, CRS)
-- Configuration file or command used
-- Complete error message and traceback
-- Steps to reproduce
-
-### Feature Requests
-
-We welcome feature suggestions! Open an issue with:
-- Clear description of proposed feature
-- Use case and motivation
-- Expected behavior
-- Example workflow (if applicable)
-
 ## Roadmap
 
 Future enhancements under consideration:
@@ -447,8 +389,6 @@ Future enhancements under consideration:
 - **Additional Metrics**: More quality and accuracy measures
 - **Time Series**: Multi-temporal analysis tools
 - **3D Visualization**: Interactive 3D displacement viewing
-- **Machine Learning**: ML-assisted parameter tuning
-- **Real-Time Monitoring**: Streaming data processing
 
 Vote on features or suggest new ones via GitHub Issues!
 
@@ -457,23 +397,14 @@ Vote on features or suggest new ones via GitHub Issues!
 **Q: What input data formats are supported?**
 A: GeoTIFF and ESRI ASCII Grid. DEMs should be single-band elevation rasters.
 
-**Q: Can I use DEMs from different sensors?**
-A: Yes, but use Mutual Information (MI) metric instead of NCC for multi-modal data.
-
-**Q: How accurate is the displacement measurement?**
-A: Typical accuracy is 0.1-0.5 pixels horizontally and 2-5× input DEM vertical accuracy.
-
 **Q: What is the maximum DEM size?**
 A: Unlimited with automatic tiling. Successfully tested with 20000×20000 pixel DEMs.
 
 **Q: Do DEMs need to have the same resolution?**
-A: Similar resolution recommended (within 2× factor). Preprocess if very different.
+A: Similar resolution recommended (within 2× factor). 
 
 **Q: Can I run batch processing?**
 A: Yes, create multiple config files and process in sequence or use Python API.
-
-**Q: Is GPU acceleration supported?**
-A: Not currently. Processing uses CPU multi-threading.
 
 **Q: Can I customize the registration parameters?**
 A: Yes, create custom elastix parameter files and specify in configuration.
