@@ -153,16 +153,6 @@ Comprehensive documentation is available:
 
 ## Examples
 
-### Wrigley Landslide Example
-
-Process the included Wrigley landslide dataset:
-
-```bash
-cd examples/wrigley
-geoelastix register --config config_wrigley.yaml
-```
-
-Or use the test script:
 
 ```bash
 python quick_test.py
