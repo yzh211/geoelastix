@@ -30,7 +30,7 @@ env/
 .venv
 
 # IDEs
-.claude/
+.claude
 .vscode/
 .idea/
 *.swp
