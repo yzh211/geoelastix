@@ -8,6 +8,7 @@
 
 GeoElastix is an open-source software for analyzing multi-temporal Digital Elevation Models (DEMs) to detect and quantify ground displacement in three dimensions. 
 
+![Workflow](docs/workflow.jpg)
 
 ## Key Features
 
