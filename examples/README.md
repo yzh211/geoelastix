@@ -76,10 +76,10 @@ Process multiple DEM pairs in a time series.
 ```python
 analyses = [
     {
-        'fixed': 'data/dem_2020.tif',
-        'moving': 'data/dem_2019.tif',
-        'job_id': 'analysis_2019_2020',
-        'description': 'Year 2019 to 2020'
+        'fixed': 'GIS/wrigley_30ft_lidar.tif',
+        'moving': 'GIS/wrigley_30ft_legacy.tif',
+        'job_id': 'analysis_legacy_vs_lidar',
+        'description': 'Wrigley Legacy vs LiDAR'
     },
     # Add more pairs...
 ]

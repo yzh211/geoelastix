@@ -32,8 +32,8 @@ def main():
     # =========================================================================
     logger.info("\nStep 1: Loading input data...")
 
-    fixed_path = "data/dem_2022.tif"
-    moving_path = "data/dem_2021.tif"
+    fixed_path = "GIS/wrigley_30ft_lidar.tif"
+    moving_path = "GIS/wrigley_30ft_legacy.tif"
 
     # Read rasters
     fixed_data = RasterIO.read_raster(fixed_path)

@@ -60,8 +60,8 @@ This validates all dependencies and optionally runs a complete test workflow. Se
 **Command-Line (Fastest)**:
 ```bash
 geoelastix register \
-  --fixed dem_2022.tif \
-  --moving dem_2021.tif \
+  --fixed GIS/wrigley_30ft_lidar.tif \
+  --moving GIS/wrigley_30ft_legacy.tif \
   --job-id landslide_analysis \
   --output ./results
 ```
@@ -84,8 +84,8 @@ from geoelastix.registration import TwoPassRegistration, ParameterManager
 from geoelastix.displacement import HorizontalDisplacement, VerticalDisplacement
 
 # Load data
-fixed_data = RasterIO.read_raster("dem_2022.tif")
-moving_data = RasterIO.read_raster("dem_2021.tif")
+fixed_data = RasterIO.read_raster("GIS/wrigley_30ft_lidar.tif")
+moving_data = RasterIO.read_raster("GIS/wrigley_30ft_legacy.tif")
 
 # Register
 param_obj = ParameterManager.create_parameter_object(method='NA')
@@ -181,8 +181,8 @@ job:
   output_dir: "./output"
 
 input:
-  fixed_image: "./data/dem_2022.tif"    # Reference (newer)
-  moving_image: "./data/dem_2021.tif"   # Moving (older)
+  fixed_image: "./GIS/wrigley_30ft_lidar.tif"    # Reference (newer)
+  moving_image: "./GIS/wrigley_30ft_legacy.tif"   # Moving (older)
 
 registration:
   method: "NA"                           # Non-Affine (BSpline)

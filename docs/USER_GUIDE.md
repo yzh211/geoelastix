@@ -33,8 +33,8 @@ Register two DEMs with minimal configuration:
 
 ```bash
 geoelastix register \
-  --fixed dem_2022.tif \
-  --moving dem_2021.tif \
+  --fixed GIS/wrigley_30ft_lidar.tif \
+  --moving GIS/wrigley_30ft_legacy.tif \
   --job-id landslide_analysis \
   --output ./results
 ```
@@ -166,8 +166,8 @@ job:
   output_dir: "./output"
 
 input:
-  fixed_image: "./data/dem_2022.tif"
-  moving_image: "./data/dem_2021.tif"
+  fixed_image: "./GIS/wrigley_30ft_lidar.tif"
+  moving_image: "./GIS/wrigley_30ft_legacy.tif"
 
 registration:
   method: "NA"
@@ -186,8 +186,8 @@ job:
 
 # Input data
 input:
-  fixed_image: "./data/dem_2022.tif"    # Reference (newer) DEM
-  moving_image: "./data/dem_2021.tif"   # Moving (older) DEM
+  fixed_image: "./GIS/wrigley_30ft_lidar.tif"    # Reference (newer) DEM
+  moving_image: "./GIS/wrigley_30ft_legacy.tif"   # Moving (older) DEM
 
 # Registration settings
 registration:

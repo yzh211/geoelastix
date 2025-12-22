@@ -9,22 +9,10 @@ def batch_process_time_series():
     # Define analyses
     analyses = [
         {
-            'fixed': 'data/dem_2020.tif',
-            'moving': 'data/dem_2019.tif',
-            'job_id': 'analysis_2019_2020',
-            'description': 'Year 2019 to 2020'
-        },
-        {
-            'fixed': 'data/dem_2021.tif',
-            'moving': 'data/dem_2020.tif',
-            'job_id': 'analysis_2020_2021',
-            'description': 'Year 2020 to 2021'
-        },
-        {
-            'fixed': 'data/dem_2022.tif',
-            'moving': 'data/dem_2021.tif',
-            'job_id': 'analysis_2021_2022',
-            'description': 'Year 2021 to 2022'
+            'fixed': 'GIS/wrigley_30ft_lidar.tif',
+            'moving': 'GIS/wrigley_30ft_legacy.tif',
+            'job_id': 'analysis_legacy_vs_lidar',
+            'description': 'Wrigley Legacy vs LiDAR'
         },
     ]
 

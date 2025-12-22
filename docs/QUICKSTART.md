@@ -14,14 +14,14 @@ Register two DEMs with a single command:
 
 ```bash
 geoelastix register \
-  --fixed dem_2022.tif \
-  --moving dem_2021.tif \
+  --fixed GIS/wrigley_30ft_lidar.tif \
+  --moving GIS/wrigley_30ft_legacy.tif \
   --job-id my_analysis \
   --output ./results
 ```
 
 **What it does**:
-- Registers `dem_2021.tif` (older) to `dem_2022.tif` (newer)
+- Registers `wrigley_30ft_legacy.tif` (older) to `wrigley_30ft_lidar.tif` (newer)
 - Calculates X, Y, Z displacement
 - Generates visualization plots
 - Saves results to `./results/my_analysis_TIMESTAMP/`
@@ -46,8 +46,8 @@ job:
   output_dir: "./output"
 
 input:
-  fixed_image: "./data/dem_2022.tif"    # Your reference DEM
-  moving_image: "./data/dem_2021.tif"   # Your moving DEM
+  fixed_image: "./GIS/wrigley_30ft_lidar.tif"    # Your reference DEM
+  moving_image: "./GIS/wrigley_30ft_legacy.tif"   # Your moving DEM
 
 registration:
   method: "NA"                           # Use default Non-Affine method

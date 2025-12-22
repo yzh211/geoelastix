@@ -59,7 +59,7 @@ from pathlib import Path
 from geoelastix.io import RasterIO
 
 # Read DEM
-dem_path = Path("data/dem_2022.tif")
+dem_path = Path("GIS/wrigley_30ft_lidar.tif")
 data = RasterIO.read_raster(dem_path)
 
 # Access data
@@ -278,12 +278,12 @@ from geoelastix.registration import TwoPassRegistration, ParameterManager
 import itk
 
 # Read input data
-fixed_data = RasterIO.read_raster("dem_2022.tif")
-moving_data = RasterIO.read_raster("dem_2021.tif")
+fixed_data = RasterIO.read_raster("GIS/wrigley_30ft_lidar.tif")
+moving_data = RasterIO.read_raster("GIS/wrigley_30ft_legacy.tif")
 
 # Get pixel spacing
 from osgeo import gdal
-ds = gdal.Open("dem_2022.tif")
+ds = gdal.Open("GIS/wrigley_30ft_lidar.tif")
 pixel_spacing = CRSManager.get_pixel_size(ds)
 
 # Convert to ITK
@@ -683,8 +683,8 @@ job_info = {
     'id': 'analysis_001',
     'description': 'Wrigley landslide 2021-2022',
     'timestamp': '2024-11-20 14:30:22',
-    'fixed_image': 'dem_2022.tif',
-    'moving_image': 'dem_2021.tif',
+    'fixed_image': 'GIS/wrigley_30ft_lidar.tif',
+    'moving_image': 'GIS/wrigley_30ft_legacy.tif',
     'method': 'NA',
     'metric': 'NCC'
 }
@@ -762,11 +762,11 @@ import itk
 from osgeo import gdal
 
 # 1. Load data
-fixed_data = RasterIO.read_raster("dem_2022.tif")
-moving_data = RasterIO.read_raster("dem_2021.tif")
+fixed_data = RasterIO.read_raster("GIS/wrigley_30ft_lidar.tif")
+moving_data = RasterIO.read_raster("GIS/wrigley_30ft_legacy.tif")
 
 # 2. Get pixel spacing
-ds = gdal.Open("dem_2022.tif")
+ds = gdal.Open("GIS/wrigley_30ft_lidar.tif")
 pixel_spacing = CRSManager.get_pixel_size(ds)
 
 # 3. Convert to ITK
@@ -834,9 +834,7 @@ from geoelastix.cli import ConfigParser, WorkflowOrchestrator
 
 # Define analyses
 analyses = [
-    ("dem_2020.tif", "dem_2019.tif", "analysis_2019_2020"),
-    ("dem_2021.tif", "dem_2020.tif", "analysis_2020_2021"),
-    ("dem_2022.tif", "dem_2021.tif", "analysis_2021_2022"),
+    ("GIS/wrigley_30ft_lidar.tif", "GIS/wrigley_30ft_legacy.tif", "analysis_legacy_vs_lidar"),
 ]
 
 # Process each pair
