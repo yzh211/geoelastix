@@ -63,7 +63,7 @@ geoelastix register \
   --fixed GIS/wrigley_30ft_lidar.tif \
   --moving GIS/wrigley_30ft_legacy.tif \
   --job-id landslide_analysis \
-  --output ./results
+  --output ./output
 ```
 
 **Configuration File (Recommended)**:

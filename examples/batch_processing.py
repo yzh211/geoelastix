@@ -30,7 +30,7 @@ def batch_process_time_series():
             'job': {
                 'id': analysis['job_id'],
                 'description': analysis['description'],
-                'output_dir': './batch_results'
+                'output_dir': './output'
             },
             'input': {
                 'fixed_image': analysis['fixed'],

@@ -17,14 +17,14 @@ geoelastix register \
   --fixed GIS/wrigley_30ft_lidar.tif \
   --moving GIS/wrigley_30ft_legacy.tif \
   --job-id my_analysis \
-  --output ./results
+  --output ./output
 ```
 
 **What it does**:
 - Registers `wrigley_30ft_legacy.tif` (older) to `wrigley_30ft_lidar.tif` (newer)
 - Calculates X, Y, Z displacement
 - Generates visualization plots
-- Saves results to `./results/my_analysis_TIMESTAMP/`
+- Saves results to `./output/my_analysis_TIMESTAMP/`
 
 ## Method 2: Configuration File (Recommended)
 

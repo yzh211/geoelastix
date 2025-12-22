@@ -676,7 +676,7 @@ Generate comprehensive reports.
 ```python
 from geoelastix.visualization import ReportGenerator
 
-report_gen = ReportGenerator(output_dir="./results")
+report_gen = ReportGenerator(output_dir="./output")
 
 # Job information
 job_info = {
@@ -737,7 +737,7 @@ timestamp = generate_timestamp()
 from geoelastix.utils import ensure_dir, get_output_directory
 
 # Create directory if not exists
-output_dir = ensure_dir("./results")
+output_dir = ensure_dir("./output")
 
 # Get output directory with timestamp
 output_dir = get_output_directory(
@@ -843,7 +843,7 @@ for fixed, moving, job_id in analyses:
 
     # Build configuration
     config = ConfigParser.merge_with_defaults({
-        'job': {'id': job_id, 'output_dir': './batch_results'},
+        'job': {'id': job_id, 'output_dir': './output'},
         'input': {'fixed_image': fixed, 'moving_image': moving},
         'registration': {'method': 'NA'},
         'visualization': {'generate_plots': True}

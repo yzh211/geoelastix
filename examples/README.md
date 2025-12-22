@@ -91,7 +91,7 @@ analyses = [
 python batch_processing.py
 ```
 
-**Output**: Results organized in `batch_results/` directory with one subdirectory per analysis.
+**Output**: Results organized in `output/` directory with one subdirectory per analysis.
 
 **Key features**:
 - Automatic configuration merging with defaults

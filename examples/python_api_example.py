@@ -171,7 +171,7 @@ def main():
     # =========================================================================
     logger.info("\nStep 6: Saving outputs...")
 
-    output_dir = Path("./api_example_output")
+    output_dir = Path("./output/api_example_output")
     ensure_dir(output_dir)
     ensure_dir(output_dir / "displacement")
     ensure_dir(output_dir / "registered")

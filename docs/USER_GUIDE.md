@@ -36,7 +36,7 @@ geoelastix register \
   --fixed GIS/wrigley_30ft_lidar.tif \
   --moving GIS/wrigley_30ft_legacy.tif \
   --job-id landslide_analysis \
-  --output ./results
+  --output ./output
 ```
 
 ### Using Configuration File
@@ -691,7 +691,7 @@ for year in 2020 2021 2022 2023; do
     --fixed dem_${year}.tif \
     --moving dem_$((year-1)).tif \
     --job-id "landslide_${year}" \
-    --output ./results_timeseries
+    --output ./output
 done
 ```
 
