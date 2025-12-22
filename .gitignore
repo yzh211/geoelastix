@@ -59,8 +59,8 @@ pics/
 *.temp
 
 # Large data files (except examples)
-*.tif
-*.tiff
+# *.tif
+# *.tiff
 !examples/**/*.tif
 !examples/**/*.tiff
 
