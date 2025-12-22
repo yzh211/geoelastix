@@ -39,7 +39,7 @@ git clone https://github.com/yzh211/geoelastix.git
 cd geoelastix
 
 # Create and activate conda environment
-conda env create -f environment.yml
+conda env create -f environment.yaml
 conda activate geoelastix
 ```
 
